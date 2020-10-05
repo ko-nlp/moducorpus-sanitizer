@@ -2,10 +2,20 @@ import argparse
 import os
 
 from .about import __version__
+from .modu_news import news_to_corpus
 
 
 def show_version(args):
     print(f'moducorpus_sanitizer=={__version__}')
+
+
+def show_arguments(args):
+    print('## Arguments of Moducorpus sanitizer ##')
+    for name, var in sorted(vars(args).items()):
+        if callable(var):
+            print(f'  - {name} : {var.__name__}')
+        else:
+            print(f'  - {name} : {var}')
 
 
 def main():
@@ -17,17 +27,16 @@ def main():
     parser_version = subparsers.add_parser('version', help='Show version')
 
     # News
-#     parser_news = subparsers.add_parser('version', help='Show version')
-#     parser_news.add_argument('--input_dir', required=True, type=str, help='path/to/NIKL_NEWSPAPER(v1.0)')
+    parser_news = subparsers.add_parser('news', help='News corpus')
+    parser_news.add_argument('--input_dir', required=True, type=str, help='path/to/NIKL_NEWSPAPER(v1.0)')
+    parser_news.add_argument('--output_dir', required=True, type=str, help='path/to/corpus/NIKL_NEWSPAPER(v1.0)')
+    parser_news.add_argument('--type', type=str, default='doublespaceline', choices=['multiline', 'doublespaceline'])
+    parser_news.add_argument('--fields', type=str, nargs='+', default=['title', 'paragraph'], choices=['title', 'paragraph'])
+    parser_news.set_defaults(func=news_to_corpus)
 
     # Do task
     args = parser.parse_args()
-    print('## Arguments of Moducorpus sanitizer ##')
-    for name, var in sorted(vars(args).items()):
-        if callable(var):
-            print(f'  - {name} : {var.__name__}')
-        else:
-            print(f'  - {name} : {var}')
+    show_arguments(args)
     task_function = args.func
     task_function(args)
 
