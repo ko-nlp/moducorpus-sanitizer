@@ -20,6 +20,7 @@ def show_arguments(args):
 
 def main():
     parser = argparse.ArgumentParser(description='moducorpus-sanitizer Command Line Interface')
+    parser.add_argument('--debug', dest='debug', action='store_true')
     parser.set_defaults(func=show_version)
     subparsers = parser.add_subparsers(help='moducorpus_sanitizer')
 
@@ -31,7 +32,7 @@ def main():
     parser_news.add_argument('--input_dir', required=True, type=str, help='path/to/NIKL_NEWSPAPER(v1.0)')
     parser_news.add_argument('--output_dir', required=True, type=str, help='path/to/corpus/NIKL_NEWSPAPER(v1.0)')
     parser_news.add_argument('--type', type=str, default='doublespaceline', choices=['multiline', 'doublespaceline'])
-    parser_news.add_argument('--fields', type=str, nargs='+', default=['title', 'paragraph'], choices=['title', 'paragraph'])
+    parser_news.add_argument('--fields', type=str, nargs='+', default=['title', 'paragraph'], choices=['title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'])
     parser_news.set_defaults(func=news_to_corpus)
 
     # Do task
