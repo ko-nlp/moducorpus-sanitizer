@@ -2,7 +2,7 @@ import argparse
 import os
 
 from .about import __version__
-from .modu_news import news_to_corpus
+from .modu_newspaper import news_to_corpus
 
 
 def show_version(args):
