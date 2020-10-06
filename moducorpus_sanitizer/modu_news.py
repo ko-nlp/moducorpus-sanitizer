@@ -15,19 +15,22 @@ def news_to_corpus(args):
     output_dir = args.output_dir
     corpus_type = args.type
     fields = args.fields
+
     fields = check_fields(fields, AVAILABLE_FIELDS)
+    fields.append('document_id')
 
     check_dir(output_dir)
 
     field_to_file = {field: f'{output_dir}/{field}.txt' for field in fields}
     paths = sorted(glob(f'{input_dir}/N*RW*.json'))
-    paths = paths[:1]  # DEVELOP CODE
+    if args.debug:  # DEVELOP CODE
+        paths = paths[:3]
 
     for documents in iterate_files(paths):
-        titles = [doc.title for doc in documents]
-        paragraphs = ['  '.join(doc.paragraph) for doc in documents]
-        append(field_to_file['title'], titles)
-        append(field_to_file['paragraph'], paragraphs)
+        for field in fields:
+            path = field_to_file[field]
+            values = [getattr(doc, field) for doc in documents]
+            append(path, values)
 
 
 def append(path, data):
@@ -67,7 +70,7 @@ def iterate_files(paths):
         with open(path, encoding='utf-8') as f:
             data = json.load(f)
         documents = data['document']
-        desc = f'Transform to ModuNews {i_path}/{len(paths)} files'
+        desc = f'Transform to ModuNews {i_path + 1}/{len(paths)} files'
         total = len(documents)
         documents = [document_to_a_news(doc) for doc in tqdm(documents, desc=desc, total=total)]
         yield documents
