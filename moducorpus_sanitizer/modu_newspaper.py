@@ -78,7 +78,12 @@ def document_to_a_news(document, paragraph_formatter):
     return ModuNews(document_id, title, author, publisher, date, topic, original_topic, paragraph)
 
 
-def iterate_files(paths, paragraph_formatter):
+def iterate_files(paths, paragraph_formatter=None):
+    if paragraph_formatter is None:
+        def func(lines):
+            return lines
+        paragraph_formatter = func
+
     news = []
     for i_path, path in enumerate(paths):
         with open(path, encoding='utf-8') as f:
