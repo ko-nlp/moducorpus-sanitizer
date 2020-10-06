@@ -3,6 +3,7 @@ import os
 
 from .about import __version__
 from .modu_newspaper import news_to_corpus
+from .modu_summarization import summarization_to_corpus
 
 
 def show_version(args):
@@ -34,6 +35,12 @@ def main():
     parser_news.add_argument('--type', type=str, default='doublespaceline', choices=['multiline', 'doublespaceline'])
     parser_news.add_argument('--fields', type=str, nargs='+', default=['title', 'paragraph'], choices=['title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'])
     parser_news.set_defaults(func=news_to_corpus)
+
+    # Summarization
+    parser_summarization = subparsers.add_parser('summarization', help='Summarization corpus')
+    parser_summarization.add_argument('--news_corpus_dir', required=True, type=str, help='path/to/corpus/NIKL_NEWSPAPER')
+    parser_summarization.add_argument('--summarization_input_dir', required=True, type=str, help='path/to/NIKL_SUMMARIZATION(v1.0)')
+    parser_summarization.add_argument('--output_dir', required=True, type=str, help='path/to/corpus/NIKL_SUMMARIZATION')
 
     # Do task
     args = parser.parse_args()
