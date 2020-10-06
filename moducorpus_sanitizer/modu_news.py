@@ -4,7 +4,7 @@ from glob import glob
 from tqdm import tqdm
 from typing import List
 
-from .utils import check_dir, check_fields
+from .utils import append, check_dir, check_fields
 
 
 # document_id is default
@@ -26,17 +26,12 @@ def news_to_corpus(args):
     if args.debug:  # DEVELOP CODE
         paths = paths[:3]
 
-    for documents in iterate_files(paths):
+    for i_doc, documents in enumerate(iterate_files(paths)):
+        mode = 'w' if i_doc == 0 else 'a'
         for field in fields:
             path = field_to_file[field]
             values = [getattr(doc, field) for doc in documents]
-            append(path, values)
-
-
-def append(path, data):
-    with open(path, 'a', encoding='utf-8') as f:
-        for row in data:
-            f.write(f'{row}\n')
+            append(path, values, mode)
 
 
 @dataclass

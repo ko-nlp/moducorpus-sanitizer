@@ -1,6 +1,12 @@
 import os
 
 
+def append(path, data, mode):
+    with open(path, mode, encoding='utf-8') as f:
+        for row in data:
+            f.write(f'{row}\n')
+
+
 def check_dir(dirname):
     os.makedirs(os.path.abspath(dirname), exist_ok=True)
 
