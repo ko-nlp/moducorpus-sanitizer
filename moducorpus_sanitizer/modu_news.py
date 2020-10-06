@@ -4,14 +4,18 @@ from glob import glob
 from tqdm import tqdm
 from typing import List
 
-from .utils import check_dir
+from .utils import check_dir, check_fields
 
+
+# document_id is default
+AVAILABLE_FIELDS = {'title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'}
 
 def news_to_corpus(args):
     input_dir = args.input_dir
     output_dir = args.output_dir
     corpus_type = args.type
     fields = args.fields
+    fields = check_fields(fields, AVAILABLE_FIELDS)
 
     check_dir(output_dir)
 
@@ -36,7 +40,6 @@ def append(path, data):
 class ModuNews:
     document_id: str
     title: str
-    author: str
     author: str
     publisher: str
     date: str
