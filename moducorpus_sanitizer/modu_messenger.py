@@ -37,6 +37,7 @@ class ModuMessenger:
     speaker_id: str
     time: str
     original_form: str
+    form: str
 
 
 def document_to_a_messenger(document):
@@ -44,15 +45,16 @@ def document_to_a_messenger(document):
         return '\n'.join([v.replace('\n', '  ') for v in values])
 
     utterance = document['utterance']
-    columns = zip(*[(u['speaker_id'], u['time'], u['original_form']) for u in utterance])
-    speaker_id, time, original_form = columns
+    columns = zip(*[(u['speaker_id'], u['time'], u['original_form'], u['form']) for u in utterance])
+    speaker_id, time, original_form, form = columns
 
     document_id = transform([document['id']] * len(speaker_id))
     speaker_id = transform(speaker_id)
     time = transform(time)
     original_form = transform(original_form)
+    form = transform(form)
 
-    return ModuMessenger(document_id, speaker_id, time, original_form)
+    return ModuMessenger(document_id, speaker_id, time, original_form, form)
 
 
 def iterate_files(paths):
