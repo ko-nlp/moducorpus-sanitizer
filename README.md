@@ -36,3 +36,16 @@ moducorpus news \
 | output_dir | path/to/corpus/NIKL_NEWSPAPER |
 | type | 다음 값 중 한가지 선택 ['multiline', 'doublespaceline' |
 | fields | 다음 값 중 중복 선택 ['title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'] |
+
+## 모두의 말뭉치: 메신저 말뭉치
+
+```
+moducorpus --debug messenger \
+  --input_dir ~/local/modu/National_Institute_Korean_Language/NIKL_MESSENGER\(v1.0\) \
+  --output_dir ~/local/modu/sanitizer/NIKL_MESSENGER/
+```
+
+| Arguments | values |
+| --- | --- |
+| input_dir | path/to/NIKL_MESSENGER(v1.0) |
+| output_dir | path/to/corpus/NIKL_MESSENGER |
