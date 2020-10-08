@@ -56,11 +56,9 @@ def document_to_a_messenger(document):
 
 
 def iterate_files(paths):
-    for i_path, path in enumerate(paths):
+    for i_path, path in enumerate(tqdm(paths, desc='Transform ModuMessenger', total=len(paths))):
         with open(path, encoding='utf-8') as f:
             data = json.load(f)
         documents = data['document']
-        desc = f'Transform to ModuMessenger {i_path + 1}/{len(paths)} files'
-        total = len(documents)
-        documents = [document_to_a_messenger(doc) for doc in tqdm(documents, desc=desc, total=total)]
+        documents = [document_to_a_messenger(doc) for doc in documents]
         yield documents
