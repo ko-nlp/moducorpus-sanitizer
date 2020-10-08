@@ -79,7 +79,6 @@ def document_to_a_news(document, paragraph_formatter):
 
 
 def iterate_files(paths, paragraph_formatter):
-    news = []
     for i_path, path in enumerate(paths):
         with open(path, encoding='utf-8') as f:
             data = json.load(f)
