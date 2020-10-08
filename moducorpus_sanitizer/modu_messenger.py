@@ -14,7 +14,7 @@ def messenger_to_corpus(args):
 
     # Prepare output paths
     check_dir(output_dir)
-    fields = {'document_id', 'speaker_id', 'time', 'original_form'}
+    fields = {'document_id', 'speaker_id', 'time', 'original_form', 'form'}
     field_to_file = {field: f'{output_dir}/{field}.txt' for field in fields}
 
     # Prepare input files
