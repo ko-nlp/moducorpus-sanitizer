@@ -31,15 +31,17 @@ def main():
     # News
     parser_news = subparsers.add_parser('news', help='News corpus')
     parser_news.add_argument('--input_dir', required=True, type=str, help='path/to/NIKL_NEWSPAPER(v1.0)')
-    parser_news.add_argument('--output_dir', required=True, type=str, help='path/to/corpus/NIKL_NEWSPAPER(v1.0)')
+    parser_news.add_argument('--output_dir', required=True, type=str,
+                             help='path/to/corpus/ It creates `NIKL_NEWSPAPER` subdirectory automatically')
     parser_news.add_argument('--type', type=str, default='doublespaceline', choices=['multiline', 'doublespaceline'])
     parser_news.add_argument('--fields', type=str, nargs='+', default=['title', 'paragraph'], choices=['title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'])
     parser_news.set_defaults(func=news_to_corpus)
 
     # Messenger
     parser_messenger = subparsers.add_parser('messenger', help='Messenger corpus')
-    parser_messenger.add_argument('--input_dir', required=True, type=str, help='path/to/NIKL_MESSENGER(v1.0)')
-    parser_messenger.add_argument('--output_dir', required=True, type=str, help='path/to/corpus/NIKL_MESSENGER(v1.0)')
+    parser_messenger.add_argument('--input_dir', required=True, type=str, help='path/to/')
+    parser_messenger.add_argument('--output_dir', required=True, type=str,
+                                  help='path/to/corpus/ It creates `NIKL_MESSENGER` subdirectory automatically')
     parser_messenger.set_defaults(func=messenger_to_corpus)
 
     # Do task

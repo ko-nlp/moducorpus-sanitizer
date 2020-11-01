@@ -1,4 +1,5 @@
 import json
+import os
 from dataclasses import dataclass
 from glob import glob
 from tqdm import tqdm
@@ -13,7 +14,7 @@ AVAILABLE_FIELDS = {'title', 'author', 'publisher', 'date', 'topic', 'original_t
 def news_to_corpus(args):
     # List-up arguments
     input_dir = args.input_dir
-    output_dir = args.output_dir
+    output_dir = os.path.join(args.output_dir, 'NIKL_NEWSPAPER')
     corpus_type = args.type
     fields = args.fields
 
