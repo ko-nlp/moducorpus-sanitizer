@@ -32,6 +32,6 @@ setup(
     keywords=[],
     packages=find_packages(),
     entry_points = {
-        'console_scripts': ['moducorpus=moducorpus_sanitizer.cli:main'],
+        'console_scripts': ['moducorpus-sanitizer=moducorpus_sanitizer.cli:main'],
     }
 )
