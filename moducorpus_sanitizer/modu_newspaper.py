@@ -12,6 +12,12 @@ from .utils import append, check_dir, check_fields
 AVAILABLE_FIELDS = {'title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'}
 
 def news_to_corpus(args):
+    def to_multiline(lines):
+        return '\n'.join(lines)
+
+    def to_doublespaceline(lines):
+        return '  '.join(lines)
+
     # List-up arguments
     input_dir = args.input_dir
     output_dir = os.path.join(args.output_dir, 'NIKL_NEWSPAPER')
@@ -44,14 +50,6 @@ def news_to_corpus(args):
             path = field_to_file[field]
             values = [getattr(doc, field) for doc in documents]
             append(path, values, mode)
-
-
-def to_multiline(lines):
-    return '\n'.join(lines) + '\n'
-
-
-def to_doublespaceline(lines):
-    return '  '.join(lines)
 
 
 @dataclass
