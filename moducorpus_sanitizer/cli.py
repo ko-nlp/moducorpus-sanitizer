@@ -4,9 +4,11 @@ from .about import __version__
 from .modu_messenger import messenger_to_corpus
 from .modu_newspaper import news_to_corpus
 from .modu_spoken import spoken_to_corpus
+from .modu_web import web_to_corpus
 from .modu_written import written_to_corpus
 from .modu_newspaper import AVAILABLE_FIELDS as NEWS_AVAILABLE_FIELDS
 from .modu_spoken import AVAILABLE_FIELDS as SPOKEN_AVAILABLE_FIELDS
+from .modu_web import AVAILABLE_FIELDS as WEB_AVAILABLE_FIELDS
 from .modu_written import AVAILABLE_FIELDS as WRITTEN_AVAILABLE_FIELDS
 
 
@@ -60,6 +62,14 @@ def main():
     p_spoken.add_argument("-r", "--remove_masked_sentences", dest="remove_masked_sentences", action="store_true")
     p_spoken.add_argument("-c", "--concate_successive", dest="concate_successive", action="store_true")
     p_spoken.set_defaults(func=spoken_to_corpus)
+
+    # Web
+    p_web = subparsers.add_parser("web", parents=[commons], help="Web corpus")
+    p_web.add_argument(
+        "--fields", type=str, nargs="+", default=WEB_AVAILABLE_FIELDS,
+        choices=WEB_AVAILABLE_FIELDS, help=" default (%(default)s), choices [%(choices)s]"
+    )
+    p_web.set_defaults(func=web_to_corpus)
 
     # Written
     p_written = subparsers.add_parser("written", parents=[commons], help="Written corpus")
