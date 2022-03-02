@@ -4,8 +4,10 @@ from .about import __version__
 from .modu_messenger import messenger_to_corpus
 from .modu_newspaper import news_to_corpus
 from .modu_spoken import spoken_to_corpus
+from .modu_written import written_to_corpus
 from .modu_newspaper import AVAILABLE_FIELDS as NEWS_AVAILABLE_FIELDS
 from .modu_spoken import AVAILABLE_FIELDS as SPOKEN_AVAILABLE_FIELDS
+from .modu_written import AVAILABLE_FIELDS as WRITTEN_AVAILABLE_FIELDS
 
 
 def show_version(args):
@@ -39,18 +41,33 @@ def main():
 
     # News
     p_news = subparsers.add_parser("news", parents=[commons], help="News corpus")
-    p_news.add_argument("--fields", type=str, nargs="+", default=["title", "paragraph"], choices=NEWS_AVAILABLE_FIELDS)
+    p_news.add_argument(
+        "--fields", type=str, nargs="+", default=NEWS_AVAILABLE_FIELDS,
+        choices=NEWS_AVAILABLE_FIELDS, help=" default (%(default)s), choices [%(choices)s]"
+    )
     p_news.set_defaults(func=news_to_corpus)
 
     # Messenger
     p_messenger = subparsers.add_parser("messenger", parents=[commons], help="Messenger corpus")
     p_messenger.set_defaults(func=messenger_to_corpus)
 
+    # Spoken
     p_spoken = subparsers.add_parser("spoken", parents=[commons], help="Conversation corpus")
-    p_spoken.add_argument("--fields", type=str, nargs="+", default=["speakers", "sentences"], choices=SPOKEN_AVAILABLE_FIELDS)
+    p_spoken.add_argument(
+        "--fields", type=str, nargs="+", default=SPOKEN_AVAILABLE_FIELDS,
+        choices=SPOKEN_AVAILABLE_FIELDS, help=" default (%(default)s), choices [%(choices)s]"
+    )
     p_spoken.add_argument("-r", "--remove_masked_sentences", dest="remove_masked_sentences", action="store_true")
     p_spoken.add_argument("-c", "--concate_successive", dest="concate_successive", action="store_true")
     p_spoken.set_defaults(func=spoken_to_corpus)
+
+    # Written
+    p_written = subparsers.add_parser("written", parents=[commons], help="Written corpus")
+    p_written.add_argument(
+        "--fields", type=str, nargs="+", default=WRITTEN_AVAILABLE_FIELDS,
+        choices=WRITTEN_AVAILABLE_FIELDS, help=" default (%(default)s), choices [%(choices)s]"
+    )
+    p_written.set_defaults(func=written_to_corpus)
 
     # Do task
     args = parser.parse_args()
