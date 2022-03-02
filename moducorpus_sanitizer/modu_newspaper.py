@@ -5,7 +5,7 @@ from glob import glob
 from tqdm import tqdm
 from typing import List
 
-from .utils import append, check_dir, check_fields
+from .utils import check_dir, check_fields
 
 
 # document_id is default
@@ -14,44 +14,33 @@ AVAILABLE_FIELDS = {'title', 'author', 'publisher', 'date', 'topic', 'original_t
 def news_to_corpus(args):
     # List-up arguments
     input_dir = args.input_dir
-    output_dir = os.path.join(args.output_dir, 'NIKL_NEWSPAPER')
-    corpus_type = args.type
+    check_dir(args.output_dir)
+    if args.text_only:
+        output_file = os.path.join(args.output_dir, 'NIKL_NEWSPAPER.text')
+    else:
+        output_file = os.path.join(args.output_dir, 'NIKL_NEWSPAPER.jsonl')
     fields = args.fields
 
     # Check fields
     fields = check_fields(fields, AVAILABLE_FIELDS)
     fields.append('document_id')
 
-    # Prepare output paths
-    check_dir(output_dir)
-    field_to_file = {field: f'{output_dir}/{field}.txt' for field in fields}
-
     # Prepare input files
     paths = sorted(glob(f'{input_dir}/N*RW*.json'))
     if args.debug:  # DEVELOP CODE
         paths = paths[:3]
 
-    # Set paragraph format
-    if corpus_type == 'doublespaceline':
-        paragraph_formatter = to_doublespaceline
-    else:
-        paragraph_formatter = to_multiline
-
     # Do sanitization
-    for i_doc, documents in enumerate(iterate_files(paths, paragraph_formatter)):
+    for i_doc, documents in enumerate(iterate_files(paths)):
         mode = 'w' if i_doc == 0 else 'a'
-        for field in fields:
-            path = field_to_file[field]
-            values = [getattr(doc, field) for doc in documents]
-            append(path, values, mode)
-
-
-def to_multiline(lines):
-    return '\n'.join(lines) + '\n'
-
-
-def to_doublespaceline(lines):
-    return '  '.join(lines)
+        with open(output_file, mode) as f:
+            if args.text_only:
+                for doc in documents:
+                    f.write(getattr(doc, "paragraph") + "\n")
+            else:
+                for doc in documents:
+                    selected = {field: getattr(doc, field) for field in fields}
+                    f.write(json.dumps(selected, ensure_ascii=False) + "\n")
 
 
 @dataclass
@@ -63,10 +52,10 @@ class ModuNews:
     date: str
     topic: str
     original_topic: str
-    paragraph: List[str]
+    paragraph: str
 
 
-def document_to_a_news(document, paragraph_formatter):
+def document_to_a_news(document):
     document_id = document['id']
     meta = document['metadata']
     title = meta['title']
@@ -75,16 +64,15 @@ def document_to_a_news(document, paragraph_formatter):
     date = meta['date']
     topic = meta['topic']
     original_topic = meta['original_topic']
-    paragraph = paragraph_formatter([p['form'] for p in document['paragraph']])
+    paragraph = "\n".join([p['form'] for p in document['paragraph']])
     return ModuNews(document_id, title, author, publisher, date, topic, original_topic, paragraph)
 
 
-def iterate_files(paths, paragraph_formatter):
-    for i_path, path in enumerate(paths):
+def iterate_files(paths):
+    for path in tqdm(paths, total=len(paths), position=1, leave=True, desc="Transform to ModuNews"):
         with open(path, encoding='utf-8') as f:
             data = json.load(f)
         documents = data['document']
-        desc = f'Transform to ModuNews {i_path + 1}/{len(paths)} files'
         total = len(documents)
-        documents = [document_to_a_news(doc, paragraph_formatter) for doc in tqdm(documents, desc=desc, total=total)]
+        documents = [document_to_a_news(doc) for doc in tqdm(documents, total=total, position=0,leave=False)]
         yield documents

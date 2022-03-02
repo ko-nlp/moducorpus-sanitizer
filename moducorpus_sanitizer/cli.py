@@ -21,20 +21,22 @@ def show_arguments(args):
 
 def main():
     parser = argparse.ArgumentParser(description='moducorpus-sanitizer Command Line Interface')
-    parser.add_argument('--debug', dest='debug', action='store_true')
     parser.set_defaults(func=show_version)
     subparsers = parser.add_subparsers(help='moducorpus_sanitizer')
+
+    commons = argparse.ArgumentParser(add_help=False)
+    commons.add_argument('--debug', dest='debug', action='store_true')
+    commons.add_argument('--text_only', dest='text_only', action='store_true')
 
     # version
     parser_version = subparsers.add_parser('version', help='Show version')
 
     # News
-    parser_news = subparsers.add_parser('news', help='News corpus')
-    parser_news.add_argument('--input_dir', required=True, type=str, help='path/to/NIKL_NEWSPAPER(v1.0)')
-    parser_news.add_argument('--output_dir', required=True, type=str,
+    parser_news = subparsers.add_parser('news', parents=[commons], help='News corpus')
+    parser_news.add_argument("-i", "--input_dir", required=True, type=str, help='path/to/NIKL_NEWSPAPER(v1.0)')
+    parser_news.add_argument("-o", "--output_dir", required=True, type=str,
                              help='path/to/corpus/ It creates `NIKL_NEWSPAPER` subdirectory automatically')
-    parser_news.add_argument('--type', type=str, default='doublespaceline', choices=['multiline', 'doublespaceline'])
-    parser_news.add_argument('--fields', type=str, nargs='+', default=['title', 'paragraph'], choices=['title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'])
+    parser_news.add_argument("--fields", type=str, nargs='+', default=['title', 'paragraph'], choices=['title', 'author', 'publisher', 'date', 'topic', 'original_topic', 'paragraph'])
     parser_news.set_defaults(func=news_to_corpus)
 
     # Messenger
