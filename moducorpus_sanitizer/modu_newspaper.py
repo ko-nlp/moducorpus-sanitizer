@@ -69,11 +69,10 @@ def document_to_a_news(document):
 
 
 def iterate_files(paths):
-    for i_path, path in enumerate(paths):
+    for path in tqdm(paths, total=len(paths), position=1, leave=True, desc="Transform to ModuNews"):
         with open(path, encoding='utf-8') as f:
             data = json.load(f)
         documents = data['document']
-        desc = f'Transform to ModuNews {i_path + 1}/{len(paths)} files'
         total = len(documents)
-        documents = [document_to_a_news(doc) for doc in tqdm(documents, desc=desc, total=total)]
+        documents = [document_to_a_news(doc) for doc in tqdm(documents, total=total, position=0,leave=False)]
         yield documents
